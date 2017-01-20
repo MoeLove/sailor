@@ -11,6 +11,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formataddr, parseaddr
 
+from conf import SENDER_ADDR, SENDER_PASSWD, SMTP_SERVER
+
 logger = logging.getLogger("root")
 
 
@@ -21,7 +23,7 @@ def _format_addr(s):
         addr.encode('utf-8') if isinstance(addr, unicode) else addr))
 
 
-def send_mail(receive_addrs, msg_type=None, ssl_type=False, **kwargs):
+def send_mail(receive_addrs, msg_type=None, is_ssl =False, **kwargs):
     u"""Send email function
 
     :arg list receive_addrs: 收件人列表
@@ -33,9 +35,9 @@ def send_mail(receive_addrs, msg_type=None, ssl_type=False, **kwargs):
     :arg bool ssl_type: 发送邮件时是否使用SSl来连接服务器, 有时会出现连接超时的情况
 
     """
-    sender_addr = 'me@moelove.info'
-    sender_passwd = 'moelove'
-    server = smtplib.SMTP(host="smtp.moelove.info", port=65 if ssl_type else 25)
+    sender_addr = SENDER_ADDR
+    sender_passwd = SENDER_PASSWD
+    server = smtplib.SMTP(host=SMTP_SERVER['host'], port=SMTP_SERVER['ssl_port'] if is_ssl else SMTP_SERVER['port'])
 
     try:
         server.login(sender_addr, sender_passwd)
